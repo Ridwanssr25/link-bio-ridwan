@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ridwan - Bio Links & Profiles</title>
+  
+  <!-- FontAwesome & Google Fonts -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- QR Code Generator Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <style>
+    :root {
+      --bg-gradient-dark: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+      --card-bg-dark: rgba(30, 41, 59, 0.7);
+      --card-border-dark: rgba(255, 255, 255, 0.1);
+      --text-main-dark: #f8fafc;
+      --text-muted-dark: #94a3b8;
+      
+      --bg-gradient-light: linear-gradient(135deg, #f1f5f9 0%, #e0e7ff 50%, #f1f5f9 100%);
+      --card-bg-light: rgba(255, 255, 255, 0.75);
+      --card-border-light: rgba(255, 255, 255, 0.6);
+      --text-main-light: #0f172a;
+      --text-muted-light: #64748b;
+
+      --accent-color: #6366f1;
+      --accent-hover: #4f46e5;
+      --accent-glow: rgba(99, 102, 241, 0.35);
+    }
+
+    [data-theme="dark"] {
+      --bg-main: var(--bg-gradient-dark);
+      --card-bg: var(--card-bg-dark);
+      --card-border: var(--card-border-dark);
+      --text-main: var(--text-main-dark);
+      --text-muted: var(--text-muted-dark);
+      --shadow-color: rgba(0, 0, 0, 0.4);
+    }
+
+    [data-theme="light"] {
+      --bg-main: var(--bg-gradient-light);
+      --card-bg: var(--card-bg-light);
+      --card-border: var(--card-border-light);
+      --text-main: var(--text-main-light);
+      --text-muted: var(--text-muted-light);
+      --shadow-color: rgba(99, 102, 241, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    }
+
+    body {
+      background: var(--bg-main);
+      background-attachment: fixed;
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 20px 15px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 480px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+
+    /* Top Navigation Bar */
+    .top-nav {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .nav-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 12px var(--shadow-color);
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .nav-btn:hover {
+      transform: translateY(-2px);
+      background: var(--accent-color);
+      color: white;
+    }
+
+    /* Profile Switcher Tabs */
+    .profile-tabs {
+      display: flex;
+      width: 100%;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(12px);
+      border-radius: 30px;
+      padding: 5px;
+      margin-bottom: 25px;
+      box-shadow: 0 4px 20px var(--shadow-color);
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 10px 8px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.82rem;
+      border-radius: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.3s ease;
+    }
+
+    .tab-btn.active {
+      background: var(--accent-color);
+      color: white;
+      box-shadow: 0 2px 10px var(--accent-glow);
+    }
+
+    /* Header Profile Info */
+    .profile-header {
+      text-align: center;
+      margin-bottom: 20px;
+      position: relative;
+      width: 100%;
+    }
+
+    .avatar-wrapper {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 12px;
+    }
+
+    .avatar {
+      width: 105px;
+      height: 105px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--accent-color);
+      box-shadow: 0 0 20px var(--accent-glow);
+    }
+
+    .verified-badge {
+      position: absolute;
+      bottom: 5px;
+      right: 5px;
+      background: #0088cc;
+      color: white;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      border: 2px solid var(--card-bg);
+    }
+
+    .profile-name {
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .profile-handle {
+      font-size: 0.88rem;
+      color: var(--accent-color);
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .profile-bio {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+      max-width: 380px;
+      margin: 0 auto 15px;
+    }
+
+    .profile-tags {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .tag {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 4px 12px;
+      border-radius: 15px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      backdrop-filter: blur(5px);
+    }
+
+    /* Links Container */
+    .links-container {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .link-card {
+      display: flex;
+      align-items: center;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(12px);
+      padding: 14px 18px;
+      border-radius: 16px;
+      text-decoration: none;
+      color: var(--text-main);
+      box-shadow: 0 4px 15px var(--shadow-color);
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .link-card:hover {
+      transform: translateY(-3px) scale(1.01);
+      border-color: var(--accent-color);
+      box-shadow: 0 8px 25px var(--accent-glow);
+    }
+
+    .link-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: rgba(99, 102, 241, 0.1);
+      color: var(--accent-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      margin-right: 14px;
+      flex-shrink: 0;
+    }
+
+    .link-details {
+      flex: 1;
+    }
+
+    .link-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .link-subtitle {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .badge-tag {
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 10px;
+      background: #ef4444;
+      color: white;
+      margin-left: 6px;
+      text-transform: uppercase;
+    }
+
+    .badge-tag.fast { background: #10b981; }
+    .badge-tag.promo { background: #f59e0b; }
+
+    .arrow-icon {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      transition: transform 0.2s ease;
+    }
+
+    .link-card:hover .arrow-icon {
+      transform: translateX(3px);
+      color: var(--accent-color);
+    }
+
+    /* Footer */
+    footer {
+      margin-top: 35px;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      padding-bottom: 10px;
+    }
+
+    /* Modal QR */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      z-index: 999;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-box {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 25px;
+      border-radius: 24px;
+      text-align: center;
+      max-width: 320px;
+      width: 90%;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    #qrcode {
+      display: flex;
+      justify-content: center;
+      margin: 15px 0;
+      padding: 10px;
+      background: white;
+      border-radius: 12px;
+    }
+
+    .close-btn {
+      margin-top: 10px;
+      background: var(--accent-color);
+      color: white;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body data-theme="dark">
+
+  <div class="container">
+    <!-- Top Bar Navigation -->
+    <div class="top-nav">
+      <button class="nav-btn" id="themeToggleBtn" title="Ganti Tema">
+        <i class="fa-solid fa-moon"></i>
+      </button>
+      <button class="nav-btn" id="qrBtn" title="QR Code Profil">
+        <i class="fa-solid fa-qrcode"></i>
+      </button>
+    </div>
+
+    <!-- Multi-Profile Tabs -->
+    <div class="profile-tabs">
+      <button class="tab-btn active" onclick="switchProfile('personal')">
+        <i class="fa-solid fa-user"></i> Personal
+      </button>
+      <button class="tab-btn" onclick="switchProfile('business')">
+        <i class="fa-solid fa-store"></i> Business
+      </button>
+      <button class="tab-btn" onclick="switchProfile('social')">
+        <i class="fa-solid fa-share-nodes"></i> Social
+      </button>
+    </div>
+
+    <!-- Dynamic Profile Header -->
+    <div class="profile-header">
+      <div class="avatar-wrapper">
+        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&auto=format&fit=crop" id="profileAvatar" class="avatar" alt="Profile Picture">
+        <div class="verified-badge"><i class="fa-solid fa-check"></i></div>
+      </div>
+      <h1 class="profile-name" id="profileName">
+        Ridwan S. <i class="fa-solid fa-circle-check" style="color: #6366f1; font-size: 1rem;"></i>
+      </h1>
+      <div class="profile-handle" id="profileHandle">@ridwanssr25</div>
+      <p class="profile-bio" id="profileBio">
+        Customer Service Officer & Digital Services Specialist. Passionate about technology, operations, & automation.
+      </p>
+      <div class="profile-tags" id="profileTags">
+        <span class="tag">🚀 Tech</span>
+        <span class="tag">⚡ Customer Support</span>
+        <span class="tag">🎮 Gamer</span>
+      </div>
+    </div>
+
+    <!-- Dynamic Links Container -->
+    <div class="links-container" id="linksContainer">
+      <!-- Generated via Javascript -->
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <p>&copy; <span id="year"></span> Ridwan. All rights reserved.</p>
+    </footer>
+  </div>
+
+  <!-- QR Modal -->
+  <div class="modal-overlay" id="qrModal">
+    <div class="modal-box">
+      <h3 style="margin-bottom: 5px;">Scan QR Profil</h3>
+      <p style="font-size: 0.8rem; color: var(--text-muted);">Pindai untuk membuka halaman ini</p>
+      <div id="qrcode"></div>
+      <button class="close-btn" onclick="closeQrModal()">Tutup</button>
+    </div>
+  </div>
+
+  <script>
+    // Data Profiles
+    const profiles = {
+      personal: {
+        name: "Ridwan S. R.",
+        handle: "@ridwanssr25",
+        avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=300&auto=format&fit=crop",
+        bio: "Customer Service Specialist. Suka mengamati perkembangan dunia teknologi, keuangan digital, & game.",
+        tags: ["👨‍💻 Tech Specialist", "📊 Digital Tools", "☕ Coffee Enthusiast"],
+        links: [
+          {
+            title: "WhatsApp Personal",
+            subtitle: "Kontak langsung pesan singkat",
+            icon: "fa-brands fa-whatsapp",
+            url: "https://wa.me/6281234567890",
+            badge: null
+          },
+          {
+            title: "LinkedIn Profile",
+            subtitle: "Pengalaman kerja & jaringan profesional",
+            icon: "fa-brands fa-linkedin-in",
+            url: "https://linkedin.com",
+            badge: null
+          },
+          {
+            title: "GitHub Repository",
+            subtitle: "Proyek & kode sumber aplikasi web",
+            icon: "fa-brands fa-github",
+            url: "https://github.com",
+            badge: null
+          }
+        ]
+      },
+      business: {
+        name: "RIdwan Reload",
+        handle: "@ridwanreload_official",
+        avatar: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=300&auto=format&fit=crop",
+        bio: "Layanan Pembayaran Digital Terpercaya: Pulsa, Paket Data, Token PLN, E-Wallet & Top-Up Game 24 Jam Nonstop.",
+        tags: ["⚡ Proses Instan", "🛡️ Aman & Terpercaya", "💎 Harga Best Price"],
+        links: [
+          {
+            title: "Order via WhatsApp Admin",
+            subtitle: "Respon cepat transaksi manual & tanya harga",
+            icon: "fa-brands fa-whatsapp",
+            url: "https://wa.me/6281234567890?text=Halo%20RIdwan%20Reload,%20saya%20mau%20order",
+            badge: { text: "FAST", type: "fast" }
+          },
+          {
+            title: "Daftar Price List Terbaru",
+            subtitle: "Cek harga pulsa, e-wallet & token PLN",
+            icon: "fa-solid fa-file-invoice-dollar",
+            url: "#",
+            badge: { text: "UPDATE", type: "promo" }
+          },
+          {
+            title: "Top-Up Game Auto-Instan",
+            subtitle: "Honor of Kings, MLBB, Free Fire, dll",
+            icon: "fa-solid fa-gamepad",
+            url: "#",
+            badge: { text: "HOT", type: "hot" }
+          }
+        ]
+      },
+      social: {
+        name: "Ridwan Social",
+        handle: "@ridwanssr25",
+        avatar: "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=300&auto=format&fit=crop",
+        bio: "Ikuti keseharian, keseruan momen game, update proyek, dan konten harian saya di media sosial.",
+        tags: ["📸 Instagram", "🎵 TikTok", "🎬 YouTube"],
+        links: [
+          {
+            title: "Instagram",
+            subtitle: "Update harian & foto kegiatan",
+            icon: "fa-brands fa-instagram",
+            url: "https://instagram.com",
+            badge: null
+          },
+          {
+            title: "TikTok Channel",
+            subtitle: "Konten video pendek & hiburan",
+            icon: "fa-brands fa-tiktok",
+            url: "https://tiktok.com",
+            badge: null
+          },
+          {
+            title: "YouTube Channel",
+            subtitle: "Video tutorial & gaming highlight",
+            icon: "fa-brands fa-youtube",
+            url: "https://youtube.com",
+            badge: null
+          }
+        ]
+      }
+    };
+
+    // Current State
+    let currentTheme = 'dark';
+    let currentProfile = 'personal';
+
+    // Elements
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    const qrBtn = document.getElementById('qrBtn');
+    const qrModal = document.getElementById('qrModal');
+    const qrcodeContainer = document.getElementById('qrcode');
+
+    // Toggle Theme
+    themeToggleBtn.addEventListener('click', () => {
+      currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      document.body.setAttribute('data-theme', currentTheme);
+      themeToggleBtn.innerHTML = currentTheme === 'dark' ? '<i class="fa-solid fa-moon"></i>' : '<i class="fa-solid fa-sun"></i>';
+    });
+
+    // Switch Profile Function
+    function switchProfile(profileKey) {
+      currentProfile = profileKey;
+      
+      // Update Tab CSS
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+
+      const data = profiles[profileKey];
+
+      // Update Header
+      document.getElementById('profileAvatar').src = data.avatar;
+      document.getElementById('profileName').innerHTML = `${data.name} <i class="fa-solid fa-circle-check" style="color: #6366f1; font-size: 1rem;"></i>`;
+      document.getElementById('profileHandle').innerText = data.handle;
+      document.getElementById('profileBio').innerText = data.bio;
+
+      // Update Tags
+      const tagsContainer = document.getElementById('profileTags');
+      tagsContainer.innerHTML = data.tags.map(t => `<span class="tag">${t}</span>`).join('');
+
+      // Update Links
+      const linksContainer = document.getElementById('linksContainer');
+      linksContainer.innerHTML = data.links.map(link => `
+        <a href="${link.url}" target="_blank" class="link-card">
+          <div class="link-icon">
+            <i class="${link.icon}"></i>
+          </div>
+          <div class="link-details">
+            <div class="link-title">
+              ${link.title}
+              ${link.badge ? `<span class="badge-tag ${link.badge.type}">${link.badge.text}</span>` : ''}
+            </div>
+            <div class="link-subtitle">${link.subtitle}</div>
+          </div>
+          <i class="fa-solid fa-chevron-right arrow-icon"></i>
+        </a>
+      `).join('');
+    }
+
+    // Modal QR
+    qrBtn.addEventListener('click', () => {
+      qrcodeContainer.innerHTML = "";
+      new QRCode(qrcodeContainer, {
+        text: window.location.href,
+        width: 160,
+        height: 160,
+      });
+      qrModal.classList.add('active');
+    });
+
+    function closeQrModal() {
+      qrModal.classList.remove('active');
+    }
+
+    // Initialize
+    document.getElementById('year').innerText = new Date().getFullYear();
+    switchProfile('personal');
+  </script>
+</body>
+</html>
